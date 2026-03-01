@@ -258,6 +258,9 @@ body { background: var(--bg); color: var(--ink); font-family: 'Outfit', sans-ser
 }
 .word-stats-bar .ws-item { display: flex; align-items: center; gap: 4px; }
 .word-stats-bar .ws-val { font-weight: 700; color: var(--accent); }
+.ws-speed-input { width: 38px; padding: 2px 4px; border: 1px solid var(--border); border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: var(--accent); text-align: center; background: var(--surface); outline: none; transition: border-color 0.2s; }
+.ws-speed-input:focus { border-color: var(--accent-mid); }
+.ws-speed-label { font-size: 10px; color: var(--ink3); }
 
 /* ======= NEW FICHA MODAL ======= */
 .nf-field { margin-bottom: 14px; }
@@ -390,7 +393,8 @@ body { background: var(--bg); color: var(--ink); font-family: 'Outfit', sans-ser
         <div class="word-stats-bar">
           <div class="ws-item">Palabras: <span class="ws-val" id="wsWords">0</span></div>
           <div class="ws-item">Caracteres: <span class="ws-val" id="wsChars">0</span></div>
-          <div class="ws-item">Tiempo escritura a mano: <span class="ws-val" id="wsTime">0 min</span></div>
+          <div class="ws-item" style="margin-left:auto">Velocidad: <input type="number" class="ws-speed-input" id="wsSpeed" value="15" min="1" max="99" oninput="updateWordStats()"> <span class="ws-speed-label">pal/min</span></div>
+          <div class="ws-item">Tiempo a mano: <span class="ws-val" id="wsTime">0 min</span></div>
         </div>
         <div class="img-attachment-wrap">
           <div class="img-attachment-label">
@@ -768,8 +772,8 @@ function updateWordStats() {
   const text = document.getElementById('fichaEditor').value;
   const words = text.trim() ? text.trim().split(/\s+/).length : 0;
   const chars = text.length;
-  // Velocidad media escritura a mano: ~15 palabras/minuto
-  const minutes = Math.ceil(words / 15);
+  const speed = parseInt(document.getElementById('wsSpeed').value) || 15;
+  const minutes = Math.ceil(words / speed);
   let timeStr;
   if (minutes < 60) {
     timeStr = minutes + ' min';
